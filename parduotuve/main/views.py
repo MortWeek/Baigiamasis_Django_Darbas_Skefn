@@ -75,7 +75,6 @@ class ProfileView(View):
             messages.warning(request,"Nepavyko išsaugoti duomenu!")
         return render(request, 'main/profile.html', locals())
 
-
 def address(request):
     add = Customer.objects.filter(vartotojas=request.user)
     return render(request, 'main/address.html', locals())
@@ -101,13 +100,6 @@ class updateAddress(View):
             messages.warning(request, "Nepavyko atnaujinti duomenu!")
         return redirect("address")
 
-def add_to_cart(request):
-    user = request.user
-    product_id = request.GET.get('prod_id')
-    produktas = Produktas.objects.get(id=product_id)
-    Cart(user=user, produktas=produktas).save()
-    return redirect("/cart")
-
 def show_cart(request):
     user = request.user
     cart = Cart.objects.filter(user=user)
@@ -118,11 +110,18 @@ def show_cart(request):
     totalamount = amount + 10
     return render(request, 'main/addtocart.html',locals())
 
+def add_to_cart(request):
+    user = request.user
+    product_id = request.GET.get('prod_id')
+    produktas = Produktas.objects.get(id=product_id)
+    Cart(user=user, produktas=produktas).save()
+    return redirect("/cart")
+
 class checkout(View):
     def get(self,request):
-        user = request.user
-        add = Customer.objects.filter(vartotojas=user)
-        cart_items = Cart.objects.filter(user=user)
+        vartotojas = request.user
+        add = Customer.objects.filter(vartotojas=vartotojas)
+        cart_items = Cart.objects.filter(user=vartotojas)
         famount = 0
         for p in cart_items:
             value = p.quantity * p.produktas.kaina_su_nuolaida
