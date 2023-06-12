@@ -1,6 +1,6 @@
 {% extends 'main/base.html' %}
 {% load static %}
-{% block title %}Uzsakymas{% endblock title %}
+{% block title %}Užsakymas{% endblock title %}
 
 {% block main-content %}
 <div class="container my-5">
@@ -52,7 +52,7 @@
             <span id="totalamount"><strong>€ {{totalamount}}</strong></span>
           </li>
         </ul>
-        <div class="d-grid"><a href="{% url 'checkout' %}" class="btn btn-primary">Apmokėti</a> </div>
+        <div class="d-grid"><a href="{% url 'checkout' %}" class="btn btn-primary">Patvirtinti</a> </div>
       </div>
     </div>
   </div>

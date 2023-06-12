@@ -133,9 +133,9 @@ def add_to_cart(request):
 
 class checkout(View):
     def get(self,request):
-        vartotojas = request.user
-        add = Customer.objects.filter(vartotojas=vartotojas)
-        cart_items = Cart.objects.filter(user=vartotojas)
+        user = request.user
+        add = Customer.objects.filter(vartotojas=user)
+        cart_items = Cart.objects.filter(user=user)
         totalitem = 0
         if request.user.is_authenticated:
             totalitem = len(Cart.objects.filter(user=request.user))
@@ -157,6 +157,7 @@ def show_cart(request):
     if request.user.is_authenticated:
         totalitem = len(Cart.objects.filter(user=request.user))
     return render(request, 'main/addtocart.html', locals())
+
 def plus_cart(request):
     if request.method == 'GET':
         prod_id=request.GET['prod_id']
@@ -216,3 +217,5 @@ def remove_cart(request):
         }
         return JsonResponse(data)
 
+def payment(request):
+    return render(request,"main/payment.html", locals())
