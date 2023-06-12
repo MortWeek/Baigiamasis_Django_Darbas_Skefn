@@ -39,8 +39,8 @@ class Customer(models.Model):
         return self.vardas
 
 class Cart(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    produktas = models.ForeignKey(Produktas,on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    produktas = models.ForeignKey(Produktas, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     @property
     def total_cost(self):

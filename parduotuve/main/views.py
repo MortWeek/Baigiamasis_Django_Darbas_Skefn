@@ -9,7 +9,10 @@ from django.db.models import Q
 
 # Create your views here.
 def home(request):
-    return render(request,"main/home.html")
+    totalitem = 0
+    if request.user.is_authenticated:
+        totalitem = len(Cart.objects.filter(user=request.user))
+    return render(request,"main/home.html", locals())
 
 def apie(request):
     totalitem = 0
@@ -25,12 +28,18 @@ def kontaktai(request):
 
 class CategoryView(View):
     def get(self,request,val):
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         produktas = Produktas.objects.filter(kategorija=val)
         pavadinimas = Produktas.objects.filter(kategorija=val).values('pavadinimas')
         return render(request,"main/kategorija.html",locals())
 
 class CategoryTitle(View):
     def get(self,request,val):
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         produktas = Produktas.objects.filter(pavadinimas=val)
         pavadinimas = Produktas.objects.filter(kategorija=produktas[0].kategorija).values('pavadinimas')
         return render(request,"main/kategorija.html",locals())
@@ -38,11 +47,17 @@ class CategoryTitle(View):
 class ProductDetail(View):
     def get(self,request,pk):
         produktas = Produktas.objects.get(pk=pk)
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         return render(request, "main/productdetail.html", locals())
 
 class CustomerRegistrationView(View):
     def get(self,request):
         form = CustomerRegistrationForm()
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         return render(request, 'main/customerregistration.html',locals())
     def post(self,request):
         form = CustomerRegistrationForm(request.POST)
@@ -56,6 +71,9 @@ class CustomerRegistrationView(View):
 class ProfileView(View):
     def get(self,request):
         form = CustomerProfileForm()
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         return render(request, 'main/profile.html', locals())
     def post(self, request):
         form = CustomerProfileForm(request.POST)
@@ -77,12 +95,18 @@ class ProfileView(View):
 
 def address(request):
     add = Customer.objects.filter(vartotojas=request.user)
+    totalitem = 0
+    if request.user.is_authenticated:
+        totalitem = len(Cart.objects.filter(user=request.user))
     return render(request, 'main/address.html', locals())
 
 class updateAddress(View):
     def get(self,request,pk):
         add = Customer.objects.get(pk=pk)
         form=CustomerProfileForm(instance=add)
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         return render(request, 'main/updateAddress.html', locals())
     def post(self,request,pk):
         form = CustomerProfileForm(request.POST)
@@ -100,16 +124,6 @@ class updateAddress(View):
             messages.warning(request, "Nepavyko atnaujinti duomenu!")
         return redirect("address")
 
-def show_cart(request):
-    user = request.user
-    cart = Cart.objects.filter(user=user)
-    amount = 0
-    for p in cart:
-        value = p.quantity * p.produktas.kaina_su_nuolaida
-        amount = amount + value
-    totalamount = amount + 10
-    return render(request, 'main/addtocart.html',locals())
-
 def add_to_cart(request):
     user = request.user
     product_id = request.GET.get('prod_id')
@@ -122,13 +136,27 @@ class checkout(View):
         vartotojas = request.user
         add = Customer.objects.filter(vartotojas=vartotojas)
         cart_items = Cart.objects.filter(user=vartotojas)
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         famount = 0
         for p in cart_items:
             value = p.quantity * p.produktas.kaina_su_nuolaida
             famount = famount + value
-        totalamount = famount + 40
+        totalamount = famount + 10
         return render(request, 'main/checkout.html', locals())
-
+def show_cart(request):
+    user = request.user
+    cart = Cart.objects.filter(user=user)
+    amount = 0
+    for p in cart:
+        value = p.quantity * p.produktas.kaina_su_nuolaida
+        amount = amount + value
+    totalamount = amount + 10
+    totalitem = 0
+    if request.user.is_authenticated:
+        totalitem = len(Cart.objects.filter(user=request.user))
+    return render(request, 'main/addtocart.html', locals())
 def plus_cart(request):
     if request.method == 'GET':
         prod_id=request.GET['prod_id']

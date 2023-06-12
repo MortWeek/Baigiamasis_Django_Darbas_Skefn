@@ -11,16 +11,16 @@
             </div>
             <div class="productdetail col-lg-5">
                 <h1 style="font-family: Georgia; font-size: 50px;">{{produktas.pavadinimas}}</h1>
-                <h5>€{{produktas.kaina_su_nuolaida}}/-</h5>
+                <h5>€{{produktas.kaina_su_nuolaida}}/</h5>
                 <small class="text-decoration-line-through text-muted
-                fs-5"><del>€ {{produktas.kaina}}/-</del></small>
+                fs-5"><del>€ {{produktas.kaina}}</del></small>
                 <br><br><h4>Aprašymas:</h4>
                 <ul class="fs-5" style="font-family: Rajdhani;">
                     <li>{{produktas.aprasymas}}</li>
                 </ul>
                 <form action="/add-to-cart" class="d-inline">
                     <input type="hidden" name="prod_id" value="{{produktas.id}}" />
-                    <button type="submit" class="btn btn-primary shadow px-5 py-2">Prideti i krepseli</button>
+                    <button type="submit" class="btn btn-primary shadow px-5 py-2">Pridėti į krepšelį</button>
                 </form>
                 <a href="{% url 'showcart' %}" class="btn btn-warning shadow px-5 py-2 ms-4">Pirkti dabar</a>
             </div>
